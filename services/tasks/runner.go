@@ -506,7 +506,6 @@ func (t *TaskRunner) updateRepository() error {
 
 func (t *TaskRunner) installCollectionsRequirements() error {
 	requirementsFilePath := path.Join(t.getPlaybookDir(), "collections", "requirements.yml")
-	requirementsHashFilePath := fmt.Sprintf("%s.md5", requirementsFilePath)
 
 	if _, err := os.Stat(requirementsFilePath); err != nil {
 		t.Log("No collections/requirements.yml file found. Skip galaxy install process.\n")
@@ -523,16 +522,12 @@ func (t *TaskRunner) installCollectionsRequirements() error {
 	}); err != nil {
 		return err
 	}
-	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
-		return err
-	}
 
 	return nil
 }
 
 func (t *TaskRunner) installRolesRequirements() error {
 	requirementsFilePath := fmt.Sprintf("%s/roles/requirements.yml", t.getRepoPath())
-	requirementsHashFilePath := fmt.Sprintf("%s.md5", requirementsFilePath)
 
 	if _, err := os.Stat(requirementsFilePath); err != nil {
 		t.Log("No roles/requirements.yml file found. Skip galaxy install process.\n")
@@ -547,9 +542,6 @@ func (t *TaskRunner) installRolesRequirements() error {
 		"--force",
 		"--force-with-deps",
 	}); err != nil {
-		return err
-	}
-	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
 		return err
 	}
 
