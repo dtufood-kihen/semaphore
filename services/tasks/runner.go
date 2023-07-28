@@ -513,21 +513,18 @@ func (t *TaskRunner) installCollectionsRequirements() error {
 		return nil
 	}
 
-	if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
-		if err := t.runGalaxy([]string{
-			"collection",
-			"install",
-			"-r",
-			requirementsFilePath,
-			"--force",
-		}); err != nil {
-			return err
-		}
-		if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
-			return err
-		}
-	} else {
-		t.Log("collections/requirements.yml has no changes. Skip galaxy install process.\n")
+	if err := t.runGalaxy([]string{
+		"collection",
+		"install",
+		"-r",
+		requirementsFilePath,
+		"--force",
+		"--force-with-deps",
+	}); err != nil {
+		return err
+	}
+	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+		return err
 	}
 
 	return nil
@@ -542,21 +539,18 @@ func (t *TaskRunner) installRolesRequirements() error {
 		return nil
 	}
 
-	if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
-		if err := t.runGalaxy([]string{
-			"role",
-			"install",
-			"-r",
-			requirementsFilePath,
-			"--force",
-		}); err != nil {
-			return err
-		}
-		if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
-			return err
-		}
-	} else {
-		t.Log("roles/requirements.yml has no changes. Skip galaxy install process.\n")
+	if err := t.runGalaxy([]string{
+		"role",
+		"install",
+		"-r",
+		requirementsFilePath,
+		"--force",
+		"--force-with-deps",
+	}); err != nil {
+		return err
+	}
+	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+		return err
 	}
 
 	return nil
